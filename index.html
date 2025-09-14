@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Familjar Deedizi</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary: #ff7e5f;
+            --secondary: #feb47b;
+            --accent: #2c3e50;
+            --light: #f9f9f9;
+            --dark: #333;
+        }
+        
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        header {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            text-align: center;
+            padding: 2.5rem 0;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            color: white;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+        }
+        
+        .tagline {
+            font-style: italic;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .contact-info div {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .categories {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .category-btn {
+            background-color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .category-btn:hover, .category-btn.active {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            transform: translateY(-3px);
+        }
+        
+        .menu {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .menu-item {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .menu-item:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .menu-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            cursor: pointer;
+            transition: transform 0.4s ease;
+        }
+        
+        .menu-item img:hover {
+            transform: scale(1.08);
+        }
+        
+        .item-details {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+        
+        .item-details h3 {
+            margin-bottom: 12px;
+            color: var(--accent);
+            font-size: 1.4rem;
+        }
+        
+        .item-details p {
+            color: #666;
+            margin-bottom: 15px;
+            font-size: 15px;
+            flex-grow: 1;
+        }
+        
+        .price {
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 1.3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .order-btn {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .order-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .modal.show {
+            display: flex;
+            opacity: 1;
+        }
+        
+        .modal-content {
+            max-width: 90%;
+            max-height: 80%;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.5);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+        
+        .modal.show .modal-content {
+            transform: scale(1);
+        }
+        
+        .modal-content img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .modal-text {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .modal-text h2 {
+            margin-bottom: 5px;
+            font-size: 1.8rem;
+            color: var(--secondary);
+        }
+        
+        .modal-text p {
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .modal-price {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .close {
+            position: absolute;
+            top: 25px;
+            right: 35px;
+            color: white;
+            font-size: 45px;
+            cursor: pointer;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+            transition: color 0.3s ease;
+            z-index: 1001;
+        }
+        
+        .close:hover {
+            color: var(--primary);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 60px;
+            background-color: var(--accent);
+            color: white;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            text-align: left;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+            color: var(--secondary);
+        }
+        
+        .footer-section p {
+            margin-bottom: 10px;
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .social-icons a {
+            color: white;
+            font-size: 1.5rem;
+            transition: color 0.3s ease;
+        }
+        
+        .social-icons a:hover {
+            color: var(--primary);
+        }
+        
+        .copyright {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        @media (max-width: 768px) {
+            .menu {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .category-btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+            
+            .contact-info {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .modal-content {
+                max-width: 95%;
+                max-height: 85%;
+            }
+            
+            .modal-text h2 {
+                font-size: 1.4rem;
+            }
+        }
+        
+        .special-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .menu-item {
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-utensils"></i>
+            </div>
+            <h1>Restaurant Familjar Deedizi</h1>
+            <p class="tagline">Shijoni shijet autentike të kuzhinës tradicionale në një ambient familjar</p>
+            
+            <div class="contact-info">
+                <div><i class="fas fa-map-marker-alt"></i> Rruga Durrësit, Tirana</div>
+                <div><i class="fas fa-phone"></i> +355 68 123 4567</div>
+                <div><i class="fas fa-clock"></i> E Hënë - E Diel: 9:00 - 23:00</div>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="categories">
+            <button class="category-btn active" data-category="all">
+                <i class="fas fa-th"></i> Të Gjitha
+            </button>
+            <button class="category-btn" data-category="food">
+                <i class="fas fa-utensils"></i> Ushqime
+            </button>
+            <button class="category-btn" data-category="drinks">
+                <i class="fas fa-glass-martini-alt"></i> Pije
+            </button>
+            <button class="category-btn" data-category="desserts">
+                <i class="fas fa-ice-cream"></i> Ëmbëlsira
+            </button>
+        </div>
+        
+        <div class="menu">
+            <!-- Ushqime -->
+            <div class="menu-item" data-category="food">
+                <div class="special-badge">E POPULLARIZUAR</div>
+                <img src="https://images.unsplash.com/photo-1600891964092-4316c288032e?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Biftek" data-name="Biftek" Biftek i freskët me pomfrita." data-price="12.50 €">
+                <div class="item-details">
+                    <h3>Biftek</h3>
+                    <p>Biftek i freskët me pomfrita.</p>
+                    <div class="price">
+                        <span>12.50 €</span>
+                        <button class="order-btn">Porosit</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="menu-item" data-category="food">
+                <img src="https://images.unsplash.com/photo-1572802419224-296b0aeee0d9?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Biftek" data-name="Hamburger" data-desc="Hamburger me kashkavall." data-price="16.80 €">
+                <div class="item-details">
+                    <h3>Hamburger</h3>
+                    <p>Hamburger me kashkavall.</p>
+                    <div class="price">
+                        <span>16.80 €</span>
+                        <button class="order-btn">Porosit</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="menu-item" data-category="food">
+                <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Pizza" data-name="Pizza Italiane" data-desc="Pizza e bërë me ingrediente organike, djathë të freskët, proshutë dhe bazilik." data-price="9.50 €">
+                <div class="item-details">
+                    <h3>Pizza Italiane</h3>
+                    <p>Pizza e bërë me ingrediente organike, djathë të freskët, proshutë dhe bazilik.</p>
+                    <div class="price">
+                        <span>9.50 €</span>
+                        <button class="order-btn">Porosit</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="menu-item" data-category="food">
+                <div class="special-badge">E RE</div>
+                <img src="https://media.istockphoto.com/id/1021236120/photo/tasty-mac-and-cheese-on-plate.jpg?s=612x612&w=0&k=20&c=MIfRNdK4FBhhgiRwi2ttW9ZUa04tvKmhNSxCJXqO-gY=" data-price="8.90 €">
+                <div class="item-details">
+                    <h3>Makarona me djathë</h3>
+                    <p>Makarona të përgatitura me recetën tradicionale të familjes, me djathë të shkrirë dhe kërpudha.</p>
+                    <div class="price">
+                        <span>8.90 €</span>
+                        <button class="order-btn">Porosit</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="menu-item" data-category="food">
+                <img src="https://feelgoodfoodie.net/wp-content/uploads/2019/02/Mediterranean-Chopped-Salad-10.jpg" data-price="7.20 €">
+                <div class="item-details">
+                    <h3>Sallatë Mediterane</h3>
+                    <p>Sallatë e freskët me perime të stinës, djathë feta, ullinj dhe salcë të veçantë.</p>
+                    <div class="price">
+                        <span>7.20 €</span>
+                        <button class="order-btn">Porosit</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="menu-item" data-category="food">
+                <img src="https://img.freepik.com/premium-photo/black-plate-counter-with-vegetables-chicken-it_118124-226602.jpg?semt=ais_incoming&w=740&q=80"10.50 €">
+                <div class="item-details">
+                    <h3>Pule me perime</h3>
+                    <p>Fileto pule me perime të skuqura, salcë të butë dhe erëza freskët.</p>
+                    <div class="price">
+                        <span>10.50 €</span>
+                        <button class="order-btn">Porosit</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Pije -->
+            <div class="menu-item" data-category="drinks">
+                <img src="https://images.unsplash.com/photo-1536935338788-846bb9981813?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Koktej frutash" data-name="Koktej frutash" data-desc="Koktej i freskët me fruta të ndryshme të sezonit dhe boronicë natyral." data-price="4.50 €">
+                <div class="item-details">
+                    <h3>Koktej frutash</h3>
+                    <p>Koktej i freskët me fruta të ndryshme të sezonit dhe boronicë natyral.</p>
+                    <div class="price">
+                        <span>4.50 €</span>
+                        <button class="order-btn">Porosit</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="menu-item" data-category="drinks">
+                <img src="https://marketplace.canva.com/MADBXoVJh8Y/1/thumbnail_large-1/canva-americano-coffee-MADBXoVJh8Y.jpg" data-price="3.20 €">
+                <div class="item-details">
+                    <h3>Kafe Speciale</h3>
+                    <p>Kafe e përzier me aroma të veçanta të importuara nga Brazili dhe Etiopia.</p>
+                    <div class="price">
+                        <span>3.20 €</span>
+                        <button class="order-btn">Porosit</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="menu-item" data-category="drinks">
+                <img src="https://media.gettyimages.com/id/1459860180/photo/a-wall-rack-of-wine-bottles.jpg?s=612x612&w=0&k=20&c=pymIG4sj-zPIZd_X_pu5RvnG80xtRbNORdvrzKI-qBY=" data-price="8.00 €">
+                <div class="item-details">
+                    <h3>Verra të ndryshme</h3>
+                    <p>Verra të zgjedhura nga rajonet më të mira të vendit dhe të importuara nga Italia.</p>
+                    <div class="price">
+                        <span>8.00 €</span>
+                        <button class="order-btn">Porosit</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="menu-item" data-category="drinks">
+                <img src="https://thumbs.dreamstime.com/b/bottles-famous-global-beer-brands-poznan-pol-july-bottles-famous-global-beer-brands-including-heineken-bud-miller-tuborg-121920462.jpg"3.50 €">
+                <div class="item-details">
+                    <h3>Birra të ndryshme</h3>
+                    <p>Birra lokale dhe të importuara, të ftohta dhe me shumë lloje për të zgjedhur.</p>
+                    <div class="price">
+                        <span>3.50 €</span>
+                        <button class="order-btn">Porosit</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="menu-item" data-category="drinks">
+                <img src="https://images.unsplash.com/photo-1546171753-97d7676e4602?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Pije pa alkool" data-name="Pije pa alkool" data-desc="Lëngje të ndryshme frutash, ujë mineral dë pije të freskëta pa alkool." data-price="2.80 €">
+                <div class="item-details">
+                    <h3>Pije pa alkool</h3>
+                    <p>Lëngje të ndryshme frutash, ujë mineral dë pije të freskëta pa alkool.</p>
+                    <div class="price">
+                        <span>2.80 €</span>
+                        <button class="order-btn">Porosit</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="menu-item" data-category="drinks">
+                <img src="https://images.unsplash.com/photo-1470337458703-46ad1756a187?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Koktej" data-name="Koktej special" data-desc="Koktej special i restauranti me pije të importuara dhe fruta të ekzotike." data-price="7.50 €">
+                <div class="item-details">
+                    <h3>Koktej special</h3>
+                    <p>Koktej special i restauranti me pije të importuara dhe fruta të ekzotike.</p>
+                    <div class="price">
+                        <span>7.50 €</span>
+                        <button class="order-btn">Porosit</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Ëmbëlsira -->
+            <div class="menu-item" data-category="desserts">
+                <div class="special-badge">E PREFERUARA</div>
+                <img src="https://images.unsplash.com/photo-1626263468007-a9e0cf83f1ac?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fGNob2NvbGF0ZSUyMGNha2V8ZW58MHx8MHx8fDA="5.50 €">
+                <div class="item-details">
+                    <h3>Tortë e çokollatës</h3>
+                    <p>Tortë e bërë me çokollatë të importuar nga Belgjika dhe krem të butë me vanilje.</p>
+                    <div class="price">
+                        <span>5.50 €</span>
+                        <button class="order-btn">Porosit</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="menu-item" data-category="desserts">
+                <img src="https://media.istockphoto.com/id/174849692/photo/ice-cream-and-fruits.jpg?s=612x612&w=0&k=20&c=ExH1Ui9CHYH5kHYtJplLUZIipWnYBTMhLx9Y6iwvIKE="3.80 €">
+                <div class="item-details">
+                    <h3>Akullore me fruta</h3>
+                    <p>Akullore e bërë në shtëpi me fruta të freskëta dhe topping të çokollatës.</p>
+                    <div class="price">
+                        <span>3.80 €</span>
+                        <button class="order-btn">Porosit</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="menu-item" data-category="desserts">
+                <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Ëmbëlsirë tradicionale" data-name="Ëmbëlsirë tradicionale" data-desc="Ëmbëlsirë e bërë sipas recetës tradicionale të familjes me mjaltë dhe arra." data-price="4.20 €">
+                <div class="item-details">
+                    <h3>Ëmbëlsirë tradicionale</h3>
+                    <p>Ëmbëlsirë e bërë sipas recetës tradicionale të familjes me mjaltë dhe arra.</p>
+                    <div class="price">
+                        <span>4.20 €</span>
+                        <button class="order-btn">Porosit</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="menu-item" data-category="desserts">
+                <img src="https://i.pinimg.com/originals/26/e6/32/26e6325bafeddf0634139dc82a0bd6a4.jpg"5.00 €">
+                <div class="item-details">
+                    <h3>Cheesecake me fruta</h3>
+                    <p>Cheesecake e kremtë me bazë biskotash dhe mbushje me fruta të freskëta.</p>
+                    <div class="price">
+                        <span>5.00 €</span>
+                        <button class="order-btn">Porosit</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="menu-item" data-category="desserts">
+                <img src="https://spcdn.shortpixel.ai/spio/ret_img,q_cdnize,to_auto,s_webp:avif/chelsweets.com/wp-content/uploads/2014/03/finished-snickers-cake-closer-768x1024.jpg" data-price="4.80 €">
+                <div class="item-details">
+                    <h3>Snicker Cake</h3>
+                    <p>Torte snikers e embel</p>
+                    <div class="price">
+                        <span>4.80 €</span>
+                        <button class="order-btn">Porosit</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="menu-item" data-category="desserts">
+                <img src="https://images.unsplash.com/photo-1624353365286-3f8d62daad51?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Orepja" data-name="Orepja me mjaltë" data-desc="Orepja e bërë në shtëpi me mjaltë dhe arra, të servuara me akullore." data-price="4.50 €">
+                <div class="item-details">
+                    <h3>torte me akullore</h3>
+                    <p>Torte me akullore shije fantastike</p>
+                    <div class="price">
+                        <span>4.50 €</span>
+                        <button class="order-btn">Porosit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal">
+        <span class="close">&times;</span>
+        <div class="modal-content">
+            <img id="expandedImg" src="" alt="">
+            <div class="modal-text">
+                <h2 id="modal-name"></h2>
+                <p id="modal-desc"></p>
+                <div class="modal-price" id="modal-price"></div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Rreth Nesh</h3>
+                <p>Restaurant Familjar Deedizi ofron shije autentike të kuzhinës tradicionale në një ambient të ngrohtë familjar. Ne përdorim vetëm përbërës të freskët dhe receta tradicionale.</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Na vizitoni</h3>
+                <p><i class="fas fa-map-marker-alt"></i> Rruga doruntina, Kamenic</p>
+                <p><i class="fas fa-phone"></i> +383 43 555 004</p>
+                <p><i class="fas fa-envelope"></i> info@deedizi.com</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Orari i hapjes</h3>
+                <p>E Hënë - E Premte: 9:00 - 23:00</p>
+                <p>E Shtunë - E Diel: 10:00 - 24:00</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-tripadvisor"></i></a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            <p>&copy; 2023 Restaurant Familjar Deedizi. Të gjitha të drejtat e rezervuara.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Filtrojmë menunë sipas kategorive
+        document.querySelectorAll('.category-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const category = button.getAttribute('data-category');
+                
+                // Aktivizimi i butonit të klikuar
+                document.querySelectorAll('.category-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                button.classList.add('active');
+                
+                // Filtrojmë menunë
+                document.querySelectorAll('.menu-item').forEach(item => {
+                    if (category === 'all' || item.getAttribute('data-category') === category) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        });
+        
+        // Hapja e fotove në modal
+        document.querySelectorAll('.menu-item img').forEach(image => {
+            image.addEventListener('click', () => {
+                const modal = document.querySelector('.modal');
+                const modalImg = document.getElementById('expandedImg');
+                const modalName = document.getElementById('modal-name');
+                const modalDesc = document.getElementById('modal-desc');
+                const modalPrice = document.getElementById('modal-price');
+                
+                modalImg.src = image.src;
+                modalImg.alt = image.alt;
+                modalName.textContent = image.getAttribute('data-name');
+                modalDesc.textContent = image.getAttribute('data-desc');
+                modalPrice.textContent = image.getAttribute('data-price');
+                
+                modal.classList.add('show');
+                document.body.style.overflow = 'hidden'; // Parandalojmë scroll-in
+            });
+        });
+        
+        // Mbyllja e modalit
+        document.querySelector('.close').addEventListener('click', () => {
+            document.querySelector('.modal').classList.remove('show');
+            document.body.style.overflow = 'auto'; // Lejojmë scroll-in përsëri
+        });
+        
+        // Mbyllja e modalit duke klikuar jashtë fotos
+        window.addEventListener('click', (event) => {
+            if (event.target === document.querySelector('.modal')) {
+                document.querySelector('.modal').classList.remove('show');
+                document.body.style.overflow = 'auto'; // Lejojmë scroll-in përsëri
+            }
+        });
+        
+        // Butoni i porosisë
+        document.querySelectorAll('.order-btn').forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const itemName = e.target.closest('.menu-item').querySelector('h3').textContent;
+                alert(`Ju porositët: ${itemName}\nPorosia juaj do të dorëzohet në tavolinën tuaj së shpejti!`);
+            });
+        });
+    </script>
+</body>
+</html>
